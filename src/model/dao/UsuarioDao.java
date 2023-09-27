@@ -1,4 +1,4 @@
 package model.dao;
 
-public class UsuarioDao {
+public interface UsuarioDao {
 }
