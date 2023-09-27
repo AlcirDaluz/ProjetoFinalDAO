@@ -9,17 +9,19 @@ public class Usuario {
     private String login;
     private String senha;
     private String confirmacaoSenha;
+    private Boolean adm;
 
     public Usuario() {
 
     }
 
-    public Usuario(String nome, String sobrenome, String login, String senha, String confirmacaoSenha) {
+    public Usuario(String nome, String sobrenome, String login, String senha, String confirmacaoSenha, Boolean adm) {
         this.nome = nome;
         this.sobrenome = sobrenome;
         this.login = login;
         this.senha = senha;
         this.confirmacaoSenha = confirmacaoSenha;
+        this.adm = adm;
     }
 
     public String getNome() {
@@ -62,21 +64,29 @@ public class Usuario {
         this.confirmacaoSenha = confirmacaoSenha;
     }
 
+    public Boolean getAdm() {
+        return adm;
+    }
+
+    public void setAdm(Boolean adm) {
+        this.adm = adm;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Usuario usuario = (Usuario) o;
-        return Objects.equals(nome, usuario.nome) && Objects.equals(sobrenome, usuario.sobrenome) && Objects.equals(login, usuario.login) && Objects.equals(senha, usuario.senha) && Objects.equals(confirmacaoSenha, usuario.confirmacaoSenha);
+        return Objects.equals(nome, usuario.nome) && Objects.equals(sobrenome, usuario.sobrenome) && Objects.equals(login, usuario.login) && Objects.equals(senha, usuario.senha) && Objects.equals(confirmacaoSenha, usuario.confirmacaoSenha) && Objects.equals(adm, usuario.adm);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(nome, sobrenome, login, senha, confirmacaoSenha);
+        return Objects.hash(nome, sobrenome, login, senha, confirmacaoSenha, adm);
     }
 
     @Override
     public String toString() {
-        return "Usuario{" + "nome='" + nome + '\'' + ", sobrenome='" + sobrenome + '\'' + ", login='" + login + '\'' + ", senha='" + senha + '\'' + ", confirmacaoSenha='" + confirmacaoSenha + '\'' + '}';
+        return "Usuario{" + "nome='" + nome + '\'' + ", sobrenome='" + sobrenome + '\'' + ", login='" + login + '\'' + ", senha='" + senha + '\'' + ", confirmacaoSenha='" + confirmacaoSenha + '\'' + ", adm=" + adm + '}';
     }
 }
