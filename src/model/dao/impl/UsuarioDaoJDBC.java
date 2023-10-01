@@ -3,6 +3,7 @@ package model.dao.impl;
 import db.DB;
 import db.DbException;
 import model.dao.UsuarioDao;
+import model.entities.Produto;
 import model.entities.Usuario;
 
 import java.sql.Connection;
@@ -146,11 +147,14 @@ public class UsuarioDaoJDBC implements UsuarioDao {
                 System.out.println("a. Cadastrar novo produto");
                 opcaoMenuCliente = entrada.next();
                 if (opcaoMenuCliente.equalsIgnoreCase("a")) {
-
+                    String nomeProduto;
+                    System.out.println("Insira o nome do produto que deseja cadastrar:");
+                    nomeProduto = entrada.next();
+                    Produto p = new Produto(nomeProduto);
+                    ProdutoDaoJDBC p1 = new ProdutoDaoJDBC(conn);
+                    p1.insert(p);
+                    System.out.println("Produto cadastrado com sucesso!");
                 }
-
-            } else {
-
             }
         } catch (SQLException e) {
             throw new DbException(e.getMessage());
