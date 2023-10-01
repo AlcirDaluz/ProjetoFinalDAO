@@ -2,12 +2,16 @@ package model.dao.impl;
 
 import db.DB;
 import db.DbException;
+import model.dao.UsuarioDao;
 import model.entities.Usuario;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Scanner;
 
-public class UsuarioDaoJDBC {
+public class UsuarioDaoJDBC implements UsuarioDao {
 
     private final Connection conn;
     Scanner entrada = new Scanner(System.in);
@@ -16,7 +20,8 @@ public class UsuarioDaoJDBC {
         this.conn = conn;
     }
 
-    void menu() {
+    @Override
+    public void menu() {
 
         String opcao;
 
@@ -88,12 +93,13 @@ public class UsuarioDaoJDBC {
         }
     }
 
+    @Override
     public void insert(Usuario obj) {
 
         PreparedStatement st = null;
 
         try {
-            st = conn.prepareStatement("INSERT INTO usuario " + "(nome, sobrenome, login, senha, confirmacaosenha, adm) " + "VALUES " + "(?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+            st = conn.prepareStatement("INSERT INTO usuario " + "(nome, sobrenome, login, senha, confirmacaosenha, adm) " + "VALUES " + "(?, ?, ?, ?, ?, ?)");
 
             st.setString(1, obj.getNome());
             st.setString(2, obj.getSobrenome());
@@ -111,10 +117,21 @@ public class UsuarioDaoJDBC {
         }
     }
 
+    @Override
+    public void validarSenha(Usuario usuario) {
+
+        while (!usuario.getSenha().equalsIgnoreCase(usuario.getConfirmacaoSenha())) {
+            System.out.println("A senha informada é diferente da senha confirmada!");
+            System.out.println("Confirme a senha:");
+            usuario.setConfirmacaoSenha(entrada.next());
+        }
+    }
+
+    @Override
     public void loginUsuario(Usuario obj) {
 
-        PreparedStatement st = null;
-        ResultSet rs = null;
+        PreparedStatement st;
+        ResultSet rs;
 
         try {
             st = conn.prepareStatement("SELECT * FROM usuario WHERE login = ? AND senha = ?");
@@ -125,42 +142,23 @@ public class UsuarioDaoJDBC {
             rs = st.executeQuery();
 
             if (rs.next()) {
-                TelaCliente telaCliente1 = new TelaCliente();
-                telaCliente1.MenuTelaCliente();
-            } else {
-                System.out.println("Login inválido.");
-                System.out.println("Deseja tentar novamente?");
-                System.out.println("a. Sim");
-                System.out.println("b. Não");
-                tentarNovamente = entrada.next();
-                if (tentarNovamente.equalsIgnoreCase("b")) {
-                    System.out.println("Deseja voltar ao menu inicial?");
-                    System.out.println("a. Sim");
-                    System.out.println("b. Não");
-                    voltarTelaInicial = entrada.next();
-                    if (voltarTelaInicial.equalsIgnoreCase("a")) {
-                        Menu voltar = new Menu();
-                        voltar.introMenu();
-                    }
-                } else {
-                    System.out.println("Informe o login:");
-                    String entradaLogin = entrada.next();
-                    System.out.println("Informe a senha:");
-                    String entradaSenha = entrada.next();
-                    LoginUsuario(entradaLogin, entradaSenha);
+                String opcaoMenuCliente;
+                System.out.println("a. Cadastrar novo produto");
+                opcaoMenuCliente = entrada.next();
+                if (opcaoMenuCliente.equalsIgnoreCase("a")) {
+
                 }
+
+            } else {
+
             }
         } catch (SQLException e) {
             throw new DbException(e.getMessage());
         }
     }
 
-    public void validarSenha(Usuario usuario) {
+    @Override
+    public void loginAdm(Usuario obj) {
 
-        while (!usuario.getSenha().equalsIgnoreCase(usuario.getConfirmacaoSenha())) {
-            System.out.println("A senha informada é diferente da senha confirmada!");
-            System.out.println("Confirme a senha:");
-            usuario.setConfirmacaoSenha(entrada.next());
-        }
     }
 }
