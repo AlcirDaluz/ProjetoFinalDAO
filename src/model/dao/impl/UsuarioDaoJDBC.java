@@ -27,6 +27,8 @@ public class UsuarioDaoJDBC implements UsuarioDao {
     @Override
     public void menu() {
 
+        PreparedStatement st = null;
+        ResultSet rs = null;
         String opcao;
 
         System.out.println("a. Cadastrar Novo Usuário");
@@ -34,66 +36,116 @@ public class UsuarioDaoJDBC implements UsuarioDao {
         System.out.println("c. Efetuar Login - Administrativo");
         opcao = entrada.next();
 
-        switch (opcao) {
-            case "a", "A" -> {
-                System.out.println("a. Cadastrar Novo Usuário Comum");
-                System.out.println("b. Cadastrar Novo Usuário Administrativo");
-                opcao = entrada.next();
-                if (opcao.equalsIgnoreCase("a")) {
+        try {
+            switch (opcao) {
+                case "a", "A" -> {
+                    System.out.println("a. Cadastrar Novo Usuário Comum");
+                    System.out.println("b. Cadastrar Novo Usuário Administrativo");
+                    opcao = entrada.next();
+                    if (opcao.equalsIgnoreCase("a")) {
 
-                    Usuario usuario = new Usuario();
+                        Usuario usuario = new Usuario();
 
-                    System.out.println("Informe o nome:");
-                    usuario.setNome(entrada.next());
-                    System.out.println("Informe o sobrenome:");
-                    usuario.setSobrenome(entrada.next());
+                        System.out.println("Informe o nome:");
+                        usuario.setNome(entrada.next());
+                        System.out.println("Informe o sobrenome:");
+                        usuario.setSobrenome(entrada.next());
+                        System.out.println("Informe o login:");
+                        usuario.setLogin(entrada.next());
+                        System.out.println("Informe a senha:");
+                        usuario.setSenha(entrada.next());
+                        System.out.println("Confirme a senha:");
+                        usuario.setConfirmacaoSenha(entrada.next());
+
+                        validarSenha(usuario);
+
+                        usuarioDao.insert(usuario);
+
+                        System.out.println("Usuário comum cadastrado com sucesso!");
+                    } else if (opcao.equalsIgnoreCase("b")) {
+
+                        Usuario usuario = new Usuario();
+
+                        System.out.println("Informe o nome:");
+                        usuario.setNome(entrada.next());
+                        System.out.println("Informe o sobrenome:");
+                        usuario.setSobrenome(entrada.next());
+                        System.out.println("Informe o login:");
+                        usuario.setLogin(entrada.next());
+                        System.out.println("Informe a senha:");
+                        usuario.setSenha(entrada.next());
+                        System.out.println("Confirme a senha:");
+                        usuario.setConfirmacaoSenha(entrada.next());
+                        usuario.setAdm(true);
+
+                        validarSenha(usuario);
+
+                        usuarioDao.insert(usuario);
+
+                        System.out.println("Usuário administrativo cadastrado com sucesso!");
+                    }
+                }
+                case "b", "B" -> {
+
                     System.out.println("Informe o login:");
-                    usuario.setLogin(entrada.next());
+                    String entradaLogin = entrada.next();
                     System.out.println("Informe a senha:");
-                    usuario.setSenha(entrada.next());
-                    System.out.println("Confirme a senha:");
-                    usuario.setConfirmacaoSenha(entrada.next());
+                    String entradaSenha = entrada.next();
 
-                    validarSenha(usuario);
+                    String sql = "SELECT * FROM usuario WHERE login = ? AND senha = ?";
 
-                    System.out.println("Usuário comum cadastrado com sucesso!");
-                } else if (opcao.equalsIgnoreCase("b")) {
 
-                    Usuario usuario = new Usuario();
+                    PreparedStatement statement = conn.prepareStatement(sql);
+                    statement.setString(1, entradaLogin);
+                    statement.setString(2, entradaSenha);
 
-                    System.out.println("Informe o nome:");
-                    usuario.setNome(entrada.next());
-                    System.out.println("Informe o sobrenome:");
-                    usuario.setSobrenome(entrada.next());
+                    rs = statement.executeQuery();
+
+                    if (rs.next()) {
+                        System.out.println("a. Buscar produto");
+                        opcao = entrada.next();
+                        if (opcao.equalsIgnoreCase("a")) {
+                            Produto p = new Produto();
+                            String nomeProduto;
+                            System.out.println("Informe o nome do produto a ser cadastrado:");
+                            nomeProduto = entrada.next();
+                            p.setNome(nomeProduto);
+                            produtoDao.insert(p);
+                        }
+                    } else {
+                        System.out.println("Login inválido.");
+                        System.out.println("Deseja tentar novamente?");
+                        System.out.println("a. Sim");
+                        System.out.println("b. Não");
+                        opcao = entrada.next();
+                        if (opcao.equalsIgnoreCase("b")) {
+                            System.out.println("Deseja voltar ao menu inicial?");
+                            System.out.println("a. Sim");
+                            System.out.println("b. Não");
+                            opcao = entrada.next();
+                            if (opcao.equalsIgnoreCase("a")) {
+                                usuarioDao.menu();
+                            }
+                        } else {
+                            System.out.println("Informe o login:");
+                            entradaLogin = entrada.next();
+                            System.out.println("Informe a senha:");
+                            entradaSenha = entrada.next();
+                            loginUsuario(new Usuario());
+                        }
+                    }
+                }
+                case "c", "C" -> {
+
                     System.out.println("Informe o login:");
-                    usuario.setLogin(entrada.next());
+                    String entradaLogin = entrada.next();
                     System.out.println("Informe a senha:");
-                    usuario.setSenha(entrada.next());
-                    System.out.println("Confirme a senha:");
-                    usuario.setConfirmacaoSenha(entrada.next());
-                    usuario.setAdm(true);
+                    String entradaSenha = entrada.next();
 
-                    validarSenha(usuario);
-                    System.out.println("Usuário administrativo cadastrado com sucesso!");
                 }
             }
-            case "b", "B" -> {
-
-                System.out.println("Informe o login:");
-                String entradaLogin = entrada.next();
-                System.out.println("Informe a senha:");
-                String entradaSenha = entrada.next();
-
-            }
-            case "c", "C" -> {
-
-                System.out.println("Informe o login:");
-                String entradaLogin = entrada.next();
-                System.out.println("Informe a senha:");
-                String entradaSenha = entrada.next();
-
-            }
-            default -> System.out.println("Opção incorreta! Tente novamente!");
+        } catch (SQLException e) {
+            throw new DbException(e.getMessage());
         }
     }
 
