@@ -1,14 +1,14 @@
 package application;
 
-import db.DB;
-
-import java.sql.Connection;
+import model.dao.UsuarioDao;
+import model.dao.impl.DaoFactory;
 
 public class Program {
 
     public static void main(String[] args) {
+        
+        UsuarioDao usuarioDao = DaoFactory.createUsuarioDao();
 
-        Connection conn = DB.getConnection();
-        DB.closeConnection();
+        usuarioDao.menu();
     }
 }

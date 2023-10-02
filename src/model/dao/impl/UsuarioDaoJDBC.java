@@ -2,6 +2,7 @@ package model.dao.impl;
 
 import db.DB;
 import db.DbException;
+import model.dao.ProdutoDao;
 import model.dao.UsuarioDao;
 import model.entities.Produto;
 import model.entities.Usuario;
@@ -16,6 +17,8 @@ public class UsuarioDaoJDBC implements UsuarioDao {
 
     private final Connection conn;
     Scanner entrada = new Scanner(System.in);
+    ProdutoDao produtoDao = DaoFactory.createProdutoDao();
+    UsuarioDao usuarioDao = DaoFactory.createUsuarioDao();
 
     public UsuarioDaoJDBC(Connection conn) {
         this.conn = conn;
@@ -131,8 +134,8 @@ public class UsuarioDaoJDBC implements UsuarioDao {
     @Override
     public void loginUsuario(Usuario obj) {
 
-        PreparedStatement st;
-        ResultSet rs;
+        PreparedStatement st = null;
+        ResultSet rs = null;
 
         try {
             st = conn.prepareStatement("SELECT * FROM usuario WHERE login = ? AND senha = ?");
@@ -151,13 +154,15 @@ public class UsuarioDaoJDBC implements UsuarioDao {
                     System.out.println("Insira o nome do produto que deseja cadastrar:");
                     nomeProduto = entrada.next();
                     Produto p = new Produto(nomeProduto);
-                    ProdutoDaoJDBC p1 = new ProdutoDaoJDBC(conn);
-                    p1.insert(p);
+                    produtoDao.insert(p);
                     System.out.println("Produto cadastrado com sucesso!");
                 }
             }
         } catch (SQLException e) {
             throw new DbException(e.getMessage());
+        } finally {
+            DB.closeStatement(st);
+            DB.closeResultSet(rs);
         }
     }
 
