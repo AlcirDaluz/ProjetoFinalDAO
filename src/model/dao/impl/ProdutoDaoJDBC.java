@@ -43,7 +43,7 @@ public class ProdutoDaoJDBC implements ProdutoDao {
         ResultSet rs = null;
 
         try {
-            st = conn.prepareStatement("SELECT produto.* FROM produto WHERE nome = ? " + "ORDER BY Name");
+            st = conn.prepareStatement("SELECT produto.* FROM produto WHERE nome = ? " + "ORDER BY nome");
 
             st.setString(1, obj.getNome());
 
@@ -51,11 +51,12 @@ public class ProdutoDaoJDBC implements ProdutoDao {
 
             List<Produto> list = new ArrayList<>();
 
-            while (rs.next()) {
+            if (rs.next()) {
                 Produto produto = new Produto();
                 list.add(produto);
+                return list;
             }
-            return list;
+            return null;
         } catch (SQLException e) {
             throw new DbException(e.getMessage());
         } finally {

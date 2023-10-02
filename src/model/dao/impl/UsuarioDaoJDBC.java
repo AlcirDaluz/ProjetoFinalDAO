@@ -106,11 +106,11 @@ public class UsuarioDaoJDBC implements UsuarioDao {
                         if (opcao.equalsIgnoreCase("a")) {
                             Produto p = new Produto();
                             String nomeProduto;
-                            System.out.println("Informe o nome do produto a ser cadastrado:");
+                            System.out.println("Informe o nome do produto que deseja buscar:");
                             nomeProduto = entrada.next();
                             p.setNome(nomeProduto);
                             ProdutoDao produtoDao = DaoFactory.createProdutoDao();
-                            produtoDao.insert(p);
+                            produtoDao.SelectByNome(p);
                         }
                     } else {
                         System.out.println("Login inválido.");
@@ -156,10 +156,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
         PreparedStatement st = null;
 
         try {
-            st = conn.prepareStatement("INSERT INTO usuario "
-                    + "(nome, sobrenome, login, senha, confirmacaosenha) "
-                    + "VALUES "
-                    + "(?, ?, ?, ?, ?)");
+            st = conn.prepareStatement("INSERT INTO usuario " + "(nome, sobrenome, login, senha, confirmacaosenha) " + "VALUES " + "(?, ?, ?, ?, ?)");
 
             st.setString(1, obj.getNome());
             st.setString(2, obj.getSobrenome());
