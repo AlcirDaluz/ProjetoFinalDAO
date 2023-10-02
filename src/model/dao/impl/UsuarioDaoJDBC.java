@@ -156,14 +156,16 @@ public class UsuarioDaoJDBC implements UsuarioDao {
         PreparedStatement st = null;
 
         try {
-            st = conn.prepareStatement("INSERT INTO usuario " + "(nome, sobrenome, login, senha, confirmacaosenha, adm) " + "VALUES " + "(?, ?, ?, ?, ?, ?)");
+            st = conn.prepareStatement("INSERT INTO usuario "
+                    + "(nome, sobrenome, login, senha, confirmacaosenha) "
+                    + "VALUES "
+                    + "(?, ?, ?, ?, ?)");
 
             st.setString(1, obj.getNome());
             st.setString(2, obj.getSobrenome());
             st.setString(3, obj.getLogin());
             st.setString(4, obj.getSenha());
             st.setString(5, obj.getConfirmacaoSenha());
-            st.setBoolean(6, obj.getAdm());
 
             st.executeUpdate();
 
@@ -179,7 +181,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
 
         Scanner entrada = new Scanner(System.in);
 
-        while (!usuario.getSenha().equalsIgnoreCase(usuario.getConfirmacaoSenha())) {
+        while (!usuario.getSenha().equals(usuario.getConfirmacaoSenha())) {
             System.out.println("A senha informada é diferente da senha confirmada!");
             System.out.println("Confirme a senha:");
             usuario.setConfirmacaoSenha(entrada.next());
