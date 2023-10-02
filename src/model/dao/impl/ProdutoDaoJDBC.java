@@ -8,12 +8,10 @@ import model.entities.Produto;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class ProdutoDaoJDBC implements ProdutoDao {
 
     private final Connection conn;
-    Scanner entrada = new Scanner(System.in);
 
     public ProdutoDaoJDBC(Connection conn) {
         this.conn = conn;

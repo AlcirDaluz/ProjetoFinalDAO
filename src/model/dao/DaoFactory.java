@@ -1,8 +1,8 @@
-package model.dao.impl;
+package model.dao;
 
 import db.DB;
-import model.dao.ProdutoDao;
-import model.dao.UsuarioDao;
+import model.dao.impl.ProdutoDaoJDBC;
+import model.dao.impl.UsuarioDaoJDBC;
 
 public class DaoFactory {
 

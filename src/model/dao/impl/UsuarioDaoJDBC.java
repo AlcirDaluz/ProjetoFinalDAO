@@ -2,6 +2,7 @@ package model.dao.impl;
 
 import db.DB;
 import db.DbException;
+import model.dao.DaoFactory;
 import model.dao.ProdutoDao;
 import model.dao.UsuarioDao;
 import model.entities.Produto;
@@ -16,9 +17,6 @@ import java.util.Scanner;
 public class UsuarioDaoJDBC implements UsuarioDao {
 
     private final Connection conn;
-    Scanner entrada = new Scanner(System.in);
-    ProdutoDao produtoDao = DaoFactory.createProdutoDao();
-    UsuarioDao usuarioDao = DaoFactory.createUsuarioDao();
 
     public UsuarioDaoJDBC(Connection conn) {
         this.conn = conn;
@@ -29,6 +27,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
 
         PreparedStatement st = null;
         ResultSet rs = null;
+        Scanner entrada = new Scanner(System.in);
         String opcao;
 
         System.out.println("a. Cadastrar Novo Usuário");
@@ -58,7 +57,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
                         usuario.setConfirmacaoSenha(entrada.next());
 
                         validarSenha(usuario);
-
+                        UsuarioDao usuarioDao = DaoFactory.createUsuarioDao();
                         usuarioDao.insert(usuario);
 
                         System.out.println("Usuário comum cadastrado com sucesso!");
@@ -79,7 +78,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
                         usuario.setAdm(true);
 
                         validarSenha(usuario);
-
+                        UsuarioDao usuarioDao = DaoFactory.createUsuarioDao();
                         usuarioDao.insert(usuario);
 
                         System.out.println("Usuário administrativo cadastrado com sucesso!");
@@ -110,6 +109,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
                             System.out.println("Informe o nome do produto a ser cadastrado:");
                             nomeProduto = entrada.next();
                             p.setNome(nomeProduto);
+                            ProdutoDao produtoDao = DaoFactory.createProdutoDao();
                             produtoDao.insert(p);
                         }
                     } else {
@@ -124,6 +124,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
                             System.out.println("b. Não");
                             opcao = entrada.next();
                             if (opcao.equalsIgnoreCase("a")) {
+                                UsuarioDao usuarioDao = DaoFactory.createUsuarioDao();
                                 usuarioDao.menu();
                             }
                         } else {
@@ -176,6 +177,8 @@ public class UsuarioDaoJDBC implements UsuarioDao {
     @Override
     public void validarSenha(Usuario usuario) {
 
+        Scanner entrada = new Scanner(System.in);
+
         while (!usuario.getSenha().equalsIgnoreCase(usuario.getConfirmacaoSenha())) {
             System.out.println("A senha informada é diferente da senha confirmada!");
             System.out.println("Confirme a senha:");
@@ -188,6 +191,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
 
         PreparedStatement st = null;
         ResultSet rs = null;
+        Scanner entrada = new Scanner(System.in);
 
         try {
             st = conn.prepareStatement("SELECT * FROM usuario WHERE login = ? AND senha = ?");
@@ -206,6 +210,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
                     System.out.println("Insira o nome do produto que deseja cadastrar:");
                     nomeProduto = entrada.next();
                     Produto p = new Produto(nomeProduto);
+                    ProdutoDao produtoDao = DaoFactory.createProdutoDao();
                     produtoDao.insert(p);
                     System.out.println("Produto cadastrado com sucesso!");
                 }

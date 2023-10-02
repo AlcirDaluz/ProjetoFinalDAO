@@ -1,7 +1,7 @@
 package application;
 
 import model.dao.UsuarioDao;
-import model.dao.impl.DaoFactory;
+import model.dao.DaoFactory;
 
 public class Program {
 
