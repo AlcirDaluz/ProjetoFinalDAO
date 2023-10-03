@@ -58,7 +58,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
 
                         validarSenha(usuario);
                         UsuarioDao usuarioDao = DaoFactory.createUsuarioDao();
-                        usuarioDao.insert(usuario);
+                        usuarioDao.insertUsuario(usuario);
 
                         System.out.println("Usuário comum cadastrado com sucesso!");
                     } else if (opcao.equalsIgnoreCase("b")) {
@@ -79,7 +79,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
 
                         validarSenha(usuario);
                         UsuarioDao usuarioDao = DaoFactory.createUsuarioDao();
-                        usuarioDao.insert(usuario);
+                        usuarioDao.insertUsuario(usuario);
 
                         System.out.println("Usuário administrativo cadastrado com sucesso!");
                     }
@@ -151,7 +151,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
     }
 
     @Override
-    public void insert(Usuario obj) {
+    public void insertUsuario(Usuario obj) {
 
         PreparedStatement st = null;
 
@@ -163,6 +163,30 @@ public class UsuarioDaoJDBC implements UsuarioDao {
             st.setString(3, obj.getLogin());
             st.setString(4, obj.getSenha());
             st.setString(5, obj.getConfirmacaoSenha());
+
+            st.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new DbException(e.getLocalizedMessage());
+        } finally {
+            DB.closeStatement(st);
+        }
+    }
+
+    @Override
+    public void insertUsuarioAdm(Usuario obj) {
+
+        PreparedStatement st = null;
+
+        try {
+            st = conn.prepareStatement("INSERT INTO usuario " + "(nome, sobrenome, login, senha, confirmacaosenha, adm) " + "VALUES " + "(?, ?, ?, ?, ?, ?)");
+
+            st.setString(1, obj.getNome());
+            st.setString(2, obj.getSobrenome());
+            st.setString(3, obj.getLogin());
+            st.setString(4, obj.getSenha());
+            st.setString(5, obj.getConfirmacaoSenha());
+            st.setBoolean(6, obj.getAdm());
 
             st.executeUpdate();
 
@@ -225,5 +249,48 @@ public class UsuarioDaoJDBC implements UsuarioDao {
     @Override
     public void loginAdm(Usuario obj) {
 
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        Scanner entrada = new Scanner(System.in);
+
+        if (obj.getAdm()) {
+
+            try {
+                st = conn.prepareStatement("SELECT * FROM usuario WHERE login = ? AND senha = ?");
+
+                st.setString(1, obj.getLogin());
+                st.setString(2, obj.getSenha());
+
+                rs = st.executeQuery();
+
+                if (rs.next()) {
+                    String opcaoMenuAdmin;
+                    System.out.println("a. Cadastrar novo produto");
+                    System.out.println("b. Buscar produto");
+                    System.out.println("c. Remover produto");
+                    System.out.println("d. Atualizar dados de produto existente");
+                    opcaoMenuAdmin = entrada.next();
+                    switch (opcaoMenuAdmin) {
+                        case "a", "A":
+                            String nomeProduto;
+                            System.out.println("Insira o nome do produto que deseja cadastrar:");
+                            nomeProduto = entrada.next();
+                            Produto p = new Produto(nomeProduto);
+                            ProdutoDao produtoDao = DaoFactory.createProdutoDao();
+                            produtoDao.insert(p);
+                            System.out.println("Produto cadastrado com sucesso!");
+                            break;
+                    }
+                }
+            } catch (SQLException e) {
+                throw new DbException(e.getMessage());
+            } finally {
+                DB.closeStatement(st);
+                DB.closeResultSet(rs);
+            }
+        } else {
+            System.out.println("Este usuário não é administrador, você será redirecionado ao menu inicial");
+            menu();
+        }
     }
 }

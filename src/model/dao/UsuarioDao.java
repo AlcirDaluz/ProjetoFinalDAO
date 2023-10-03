@@ -6,7 +6,9 @@ public interface UsuarioDao {
 
     void menu();
 
-    void insert(Usuario obj);
+    void insertUsuario(Usuario obj);
+
+    void insertUsuarioAdm(Usuario obj);
 
     void validarSenha(Usuario obj);
 
