@@ -35,118 +35,80 @@ public class UsuarioDaoJDBC implements UsuarioDao {
         System.out.println("c. Efetuar Login - Administrativo");
         opcao = entrada.next();
 
-        try {
-            switch (opcao) {
-                case "a", "A" -> {
-                    System.out.println("a. Cadastrar Novo Usuário Comum");
-                    System.out.println("b. Cadastrar Novo Usuário Administrativo");
-                    opcao = entrada.next();
-                    if (opcao.equalsIgnoreCase("a")) {
+        switch (opcao) {
+            case "a", "A" -> {
+                System.out.println("a. Cadastrar Novo Usuário Comum");
+                System.out.println("b. Cadastrar Novo Usuário Administrativo");
+                opcao = entrada.next();
 
-                        Usuario usuario = new Usuario();
+                if (opcao.equalsIgnoreCase("a")) {
 
-                        System.out.println("Informe o nome:");
-                        usuario.setNome(entrada.next());
-                        System.out.println("Informe o sobrenome:");
-                        usuario.setSobrenome(entrada.next());
-                        System.out.println("Informe o login:");
-                        usuario.setLogin(entrada.next());
-                        System.out.println("Informe a senha:");
-                        usuario.setSenha(entrada.next());
-                        System.out.println("Confirme a senha:");
-                        usuario.setConfirmacaoSenha(entrada.next());
+                    Usuario usuario = new Usuario();
 
-                        validarSenha(usuario);
-                        UsuarioDao usuarioDao = DaoFactory.createUsuarioDao();
-                        usuarioDao.insertUsuario(usuario);
-
-                        System.out.println("Usuário comum cadastrado com sucesso!");
-                    } else if (opcao.equalsIgnoreCase("b")) {
-
-                        Usuario usuario = new Usuario();
-
-                        System.out.println("Informe o nome:");
-                        usuario.setNome(entrada.next());
-                        System.out.println("Informe o sobrenome:");
-                        usuario.setSobrenome(entrada.next());
-                        System.out.println("Informe o login:");
-                        usuario.setLogin(entrada.next());
-                        System.out.println("Informe a senha:");
-                        usuario.setSenha(entrada.next());
-                        System.out.println("Confirme a senha:");
-                        usuario.setConfirmacaoSenha(entrada.next());
-                        usuario.setAdm(true);
-
-                        validarSenha(usuario);
-                        UsuarioDao usuarioDao = DaoFactory.createUsuarioDao();
-                        usuarioDao.insertUsuario(usuario);
-
-                        System.out.println("Usuário administrativo cadastrado com sucesso!");
-                    }
-                }
-                case "b", "B" -> {
-
+                    System.out.println("Informe o nome:");
+                    usuario.setNome(entrada.next());
+                    System.out.println("Informe o sobrenome:");
+                    usuario.setSobrenome(entrada.next());
                     System.out.println("Informe o login:");
-                    String entradaLogin = entrada.next();
+                    usuario.setLogin(entrada.next());
                     System.out.println("Informe a senha:");
-                    String entradaSenha = entrada.next();
+                    usuario.setSenha(entrada.next());
+                    System.out.println("Confirme a senha:");
+                    usuario.setConfirmacaoSenha(entrada.next());
 
-                    String sql = "SELECT * FROM usuario WHERE login = ? AND senha = ?";
+                    validarSenha(usuario);
 
+                    insertUsuario(usuario);
 
-                    PreparedStatement statement = conn.prepareStatement(sql);
-                    statement.setString(1, entradaLogin);
-                    statement.setString(2, entradaSenha);
+                    System.out.println("Usuário comum cadastrado com sucesso!");
+                } else if (opcao.equalsIgnoreCase("b")) {
 
-                    rs = statement.executeQuery();
+                    Usuario usuario = new Usuario();
 
-                    if (rs.next()) {
-                        System.out.println("a. Buscar produto");
-                        opcao = entrada.next();
-                        if (opcao.equalsIgnoreCase("a")) {
-                            Produto p = new Produto();
-                            String nomeProduto;
-                            System.out.println("Informe o nome do produto que deseja buscar:");
-                            nomeProduto = entrada.next();
-                            p.setNome(nomeProduto);
-                            ProdutoDao produtoDao = DaoFactory.createProdutoDao();
-                            produtoDao.SelectByNome(p);
-                        }
-                    } else {
-                        System.out.println("Login inválido.");
-                        System.out.println("Deseja tentar novamente?");
-                        System.out.println("a. Sim");
-                        System.out.println("b. Não");
-                        opcao = entrada.next();
-                        if (opcao.equalsIgnoreCase("b")) {
-                            System.out.println("Deseja voltar ao menu inicial?");
-                            System.out.println("a. Sim");
-                            System.out.println("b. Não");
-                            opcao = entrada.next();
-                            if (opcao.equalsIgnoreCase("a")) {
-                                UsuarioDao usuarioDao = DaoFactory.createUsuarioDao();
-                                usuarioDao.menu();
-                            }
-                        } else {
-                            System.out.println("Informe o login:");
-                            entradaLogin = entrada.next();
-                            System.out.println("Informe a senha:");
-                            entradaSenha = entrada.next();
-                            loginUsuario(new Usuario());
-                        }
-                    }
-                }
-                case "c", "C" -> {
-
+                    System.out.println("Informe o nome:");
+                    usuario.setNome(entrada.next());
+                    System.out.println("Informe o sobrenome:");
+                    usuario.setSobrenome(entrada.next());
                     System.out.println("Informe o login:");
-                    String entradaLogin = entrada.next();
+                    usuario.setLogin(entrada.next());
                     System.out.println("Informe a senha:");
-                    String entradaSenha = entrada.next();
+                    usuario.setSenha(entrada.next());
+                    System.out.println("Confirme a senha:");
+                    usuario.setConfirmacaoSenha(entrada.next());
+                    usuario.setAdm("true");
 
+                    validarSenha(usuario);
+
+                    insertUsuarioAdm(usuario);
+
+                    System.out.println("Usuário administrativo cadastrado com sucesso!");
                 }
             }
-        } catch (SQLException e) {
-            throw new DbException(e.getMessage());
+            case "b", "B" -> {
+
+                System.out.println("Informe o login:");
+                String entradaLogin = entrada.next();
+                System.out.println("Informe a senha:");
+                String entradaSenha = entrada.next();
+
+                Usuario usuario = new Usuario();
+                usuario.setLogin(entradaLogin);
+                usuario.setSenha(entradaSenha);
+                loginUsuario(usuario);
+            }
+            case "c", "C" -> {
+
+                System.out.println("Informe o login:");
+                String entradaLogin = entrada.next();
+                System.out.println("Informe a senha:");
+                String entradaSenha = entrada.next();
+
+                Usuario usuario = new Usuario();
+                usuario.setLogin(entradaLogin);
+                usuario.setSenha(entradaSenha);
+                loginAdm(usuario);
+
+            }
         }
     }
 
@@ -186,7 +148,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
             st.setString(3, obj.getLogin());
             st.setString(4, obj.getSenha());
             st.setString(5, obj.getConfirmacaoSenha());
-            st.setBoolean(6, obj.getAdm());
+            st.setString(6, obj.getAdm());
 
             st.executeUpdate();
 
@@ -253,44 +215,50 @@ public class UsuarioDaoJDBC implements UsuarioDao {
         ResultSet rs = null;
         Scanner entrada = new Scanner(System.in);
 
-        if (obj.getAdm()) {
 
-            try {
-                st = conn.prepareStatement("SELECT * FROM usuario WHERE login = ? AND senha = ?");
+        try {
+            st = conn.prepareStatement("SELECT * FROM usuario WHERE login = ? AND senha = ? AND adm = 'true'");
 
-                st.setString(1, obj.getLogin());
-                st.setString(2, obj.getSenha());
+            st.setString(1, obj.getLogin());
+            st.setString(2, obj.getSenha());
 
-                rs = st.executeQuery();
+            rs = st.executeQuery();
 
-                if (rs.next()) {
-                    String opcaoMenuAdmin;
-                    System.out.println("a. Cadastrar novo produto");
-                    System.out.println("b. Buscar produto");
-                    System.out.println("c. Remover produto");
-                    System.out.println("d. Atualizar dados de produto existente");
-                    opcaoMenuAdmin = entrada.next();
-                    switch (opcaoMenuAdmin) {
-                        case "a", "A":
-                            String nomeProduto;
-                            System.out.println("Insira o nome do produto que deseja cadastrar:");
-                            nomeProduto = entrada.next();
-                            Produto p = new Produto(nomeProduto);
-                            ProdutoDao produtoDao = DaoFactory.createProdutoDao();
-                            produtoDao.insert(p);
-                            System.out.println("Produto cadastrado com sucesso!");
-                            break;
-                    }
+            if (rs.next()) {
+                String opcaoMenuAdmin;
+                System.out.println("a. Cadastrar novo produto");
+                System.out.println("b. Buscar produto");
+                System.out.println("c. Remover produto");
+                System.out.println("d. Atualizar dados de produto existente");
+                opcaoMenuAdmin = entrada.next();
+                switch (opcaoMenuAdmin) {
+                    case "a", "A":
+                        String nomeProduto;
+                        System.out.println("Insira o nome do produto que deseja cadastrar:");
+                        nomeProduto = entrada.next();
+                        Produto p = new Produto(nomeProduto);
+                        ProdutoDao produtoDao = DaoFactory.createProdutoDao();
+                        produtoDao.insert(p);
+                        System.out.println("Produto cadastrado com sucesso!");
+                        break;
+                    case "b", "B":
+                        String nomeProdutoSelect;
+                        System.out.println("Insira o nome do produto que deseja buscar:");
+                        nomeProdutoSelect = entrada.next();
+                        Produto produtoSelect = new Produto(nomeProdutoSelect);
+                        ProdutoDao produtoDaoSelect = DaoFactory.createProdutoDao();
+                        produtoDaoSelect.SelectByNome(produtoSelect);
+                        break;
                 }
-            } catch (SQLException e) {
-                throw new DbException(e.getMessage());
-            } finally {
-                DB.closeStatement(st);
-                DB.closeResultSet(rs);
+            } else {
+                System.out.println("Este usuário não é administrador, você será redirecionado ao menu inicial");
+                menu();
             }
-        } else {
-            System.out.println("Este usuário não é administrador, você será redirecionado ao menu inicial");
-            menu();
+        } catch (SQLException e) {
+            throw new DbException(e.getMessage());
+        } finally {
+            DB.closeStatement(st);
+            DB.closeResultSet(rs);
         }
     }
 }

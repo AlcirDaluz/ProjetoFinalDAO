@@ -9,13 +9,13 @@ public class Usuario {
     private String login;
     private String senha;
     private String confirmacaoSenha;
-    private Boolean adm;
+    private String adm;
 
     public Usuario() {
 
     }
 
-    public Usuario(String nome, String sobrenome, String login, String senha, String confirmacaoSenha, Boolean adm) {
+    public Usuario(String nome, String sobrenome, String login, String senha, String confirmacaoSenha, String adm) {
         this.nome = nome;
         this.sobrenome = sobrenome;
         this.login = login;
@@ -64,11 +64,11 @@ public class Usuario {
         this.confirmacaoSenha = confirmacaoSenha;
     }
 
-    public Boolean getAdm() {
+    public String getAdm() {
         return adm;
     }
 
-    public void setAdm(Boolean adm) {
+    public void setAdm(String adm) {
         this.adm = adm;
     }
 

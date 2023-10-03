@@ -55,8 +55,10 @@ public class ProdutoDaoJDBC implements ProdutoDao {
                 Produto produto = new Produto();
                 list.add(produto);
                 return list;
+            } else {
+                System.out.println("Produto não encontrado!");
+                return null;
             }
-            return null;
         } catch (SQLException e) {
             throw new DbException(e.getMessage());
         } finally {
