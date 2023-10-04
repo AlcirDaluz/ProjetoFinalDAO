@@ -6,8 +6,6 @@ import model.dao.ProdutoDao;
 import model.entities.Produto;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ProdutoDaoJDBC implements ProdutoDao {
 
@@ -37,27 +35,22 @@ public class ProdutoDaoJDBC implements ProdutoDao {
     }
 
     @Override
-    public List<Produto> SelectByNome(Produto obj) {
+    public void SelectByNome(String nome) {
 
         PreparedStatement st = null;
         ResultSet rs = null;
 
         try {
-            st = conn.prepareStatement("SELECT produto.* FROM produto WHERE nome = ? " + "ORDER BY nome");
+            st = conn.prepareStatement("SELECT * FROM produto WHERE nome = ? " + "ORDER BY nome");
 
-            st.setString(1, obj.getNome());
+            st.setString(1, nome);
 
             rs = st.executeQuery();
 
-            List<Produto> list = new ArrayList<>();
-
             if (rs.next()) {
-                Produto produto = new Produto();
-                list.add(produto);
-                return list;
+                System.out.println("Produto encontrado!");
             } else {
                 System.out.println("Produto não encontrado!");
-                return null;
             }
         } catch (SQLException e) {
             throw new DbException(e.getMessage());

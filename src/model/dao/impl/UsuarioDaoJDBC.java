@@ -238,9 +238,8 @@ public class UsuarioDaoJDBC implements UsuarioDao {
                         String nomeProdutoSelect;
                         System.out.println("Insira o nome do produto que deseja buscar:");
                         nomeProdutoSelect = entrada.next();
-                        Produto produtoSelect = new Produto(nomeProdutoSelect);
                         ProdutoDao produtoDaoSelect = DaoFactory.createProdutoDao();
-                        produtoDaoSelect.SelectByNome(produtoSelect);
+                        produtoDaoSelect.SelectByNome(nomeProdutoSelect);
                         break;
                 }
             } else {
