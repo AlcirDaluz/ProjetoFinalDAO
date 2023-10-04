@@ -1,5 +1,6 @@
 package model.dao.impl;
 
+import application.Menu;
 import db.DB;
 import db.DbException;
 import model.dao.DaoFactory;
@@ -20,89 +21,6 @@ public class UsuarioDaoJDBC implements UsuarioDao {
 
     public UsuarioDaoJDBC(Connection conn) {
         this.conn = conn;
-    }
-
-    @Override
-    public void menu() {
-
-        PreparedStatement st = null;
-        ResultSet rs = null;
-        Scanner entrada = new Scanner(System.in);
-        String opcao;
-
-        System.out.println("a. Cadastrar Novo Usuário");
-        System.out.println("b. Efetuar Login - Usuário");
-        System.out.println("c. Efetuar Login - Administrativo");
-        opcao = entrada.next();
-
-        switch (opcao) {
-            case "a", "A" -> {
-                System.out.println("a. Cadastrar Novo Usuário Comum");
-                System.out.println("b. Cadastrar Novo Usuário Administrativo");
-                opcao = entrada.next();
-
-                if (opcao.equalsIgnoreCase("a")) {
-
-                    Usuario usuario = new Usuario();
-
-                    System.out.println("Informe o nome:");
-                    usuario.setNome(entrada.next());
-                    System.out.println("Informe o sobrenome:");
-                    usuario.setSobrenome(entrada.next());
-                    System.out.println("Informe o login:");
-                    usuario.setLogin(entrada.next());
-                    System.out.println("Informe a senha:");
-                    usuario.setSenha(entrada.next());
-                    System.out.println("Confirme a senha:");
-                    usuario.setConfirmacaoSenha(entrada.next());
-
-                    validarSenha(usuario);
-
-                    insertUsuario(usuario);
-
-                    System.out.println("Usuário comum cadastrado com sucesso!");
-                } else if (opcao.equalsIgnoreCase("b")) {
-
-                    Usuario usuario = new Usuario();
-
-                    System.out.println("Informe o nome:");
-                    usuario.setNome(entrada.next());
-                    System.out.println("Informe o sobrenome:");
-                    usuario.setSobrenome(entrada.next());
-                    System.out.println("Informe o login:");
-                    usuario.setLogin(entrada.next());
-                    System.out.println("Informe a senha:");
-                    usuario.setSenha(entrada.next());
-                    System.out.println("Confirme a senha:");
-                    usuario.setConfirmacaoSenha(entrada.next());
-                    usuario.setAdm("true");
-
-                    validarSenha(usuario);
-
-                    insertUsuarioAdm(usuario);
-
-                    System.out.println("Usuário administrativo cadastrado com sucesso!");
-                }
-            }
-            case "b", "B" -> {
-
-                System.out.println("Informe o login:");
-                String entradaLogin = entrada.next();
-                System.out.println("Informe a senha:");
-                String entradaSenha = entrada.next();
-
-                loginUsuario(entradaLogin, entradaSenha);
-            }
-            case "c", "C" -> {
-
-                System.out.println("Informe o login:");
-                String entradaLogin = entrada.next();
-                System.out.println("Informe a senha:");
-                String entradaSenha = entrada.next();
-
-                loginAdm(entradaLogin, entradaSenha);
-            }
-        }
     }
 
     @Override
@@ -208,7 +126,6 @@ public class UsuarioDaoJDBC implements UsuarioDao {
         ResultSet rs = null;
         Scanner entrada = new Scanner(System.in);
 
-
         try {
             st = conn.prepareStatement("SELECT * FROM usuario WHERE login = ? AND senha = ? AND adm = 'true'");
 
@@ -244,7 +161,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
                 }
             } else {
                 System.out.println("Este usuário não é administrador, você será redirecionado ao menu inicial");
-                menu();
+                Menu.menu();
             }
         } catch (SQLException e) {
             throw new DbException(e.getMessage());
