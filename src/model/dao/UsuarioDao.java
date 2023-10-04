@@ -12,7 +12,7 @@ public interface UsuarioDao {
 
     void validarSenha(Usuario obj);
 
-    void loginUsuario(Usuario obj);
+    void loginUsuario(String login, String senha);
 
-    void loginAdm(Usuario obj);
+    void loginAdm(String login, String senha);
 }

@@ -91,10 +91,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
                 System.out.println("Informe a senha:");
                 String entradaSenha = entrada.next();
 
-                Usuario usuario = new Usuario();
-                usuario.setLogin(entradaLogin);
-                usuario.setSenha(entradaSenha);
-                loginUsuario(usuario);
+                loginUsuario(entradaLogin, entradaSenha);
             }
             case "c", "C" -> {
 
@@ -103,11 +100,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
                 System.out.println("Informe a senha:");
                 String entradaSenha = entrada.next();
 
-                Usuario usuario = new Usuario();
-                usuario.setLogin(entradaLogin);
-                usuario.setSenha(entradaSenha);
-                loginAdm(usuario);
-
+                loginAdm(entradaLogin, entradaSenha);
             }
         }
     }
@@ -172,7 +165,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
     }
 
     @Override
-    public void loginUsuario(Usuario obj) {
+    public void loginUsuario(String login, String senha) {
 
         PreparedStatement st = null;
         ResultSet rs = null;
@@ -181,8 +174,8 @@ public class UsuarioDaoJDBC implements UsuarioDao {
         try {
             st = conn.prepareStatement("SELECT * FROM usuario WHERE login = ? AND senha = ?");
 
-            st.setString(1, obj.getLogin());
-            st.setString(2, obj.getSenha());
+            st.setString(1, login);
+            st.setString(2, senha);
 
             rs = st.executeQuery();
 
@@ -209,7 +202,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
     }
 
     @Override
-    public void loginAdm(Usuario obj) {
+    public void loginAdm(String login, String senha) {
 
         PreparedStatement st = null;
         ResultSet rs = null;
@@ -219,8 +212,8 @@ public class UsuarioDaoJDBC implements UsuarioDao {
         try {
             st = conn.prepareStatement("SELECT * FROM usuario WHERE login = ? AND senha = ? AND adm = 'true'");
 
-            st.setString(1, obj.getLogin());
-            st.setString(2, obj.getSenha());
+            st.setString(1, login);
+            st.setString(2, senha);
 
             rs = st.executeQuery();
 
