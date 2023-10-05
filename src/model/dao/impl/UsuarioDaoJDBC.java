@@ -87,7 +87,11 @@ public class UsuarioDaoJDBC implements UsuarioDao {
 
         PreparedStatement st = null;
         ResultSet rs = null;
+        ProdutoDao produtoDao = DaoFactory.createProdutoDao();
         Scanner entrada = new Scanner(System.in);
+        Produto p = new Produto();
+        String opcaoMenu;
+        String nomeProduto;
 
         try {
             st = conn.prepareStatement("SELECT * FROM usuario WHERE login = ? AND senha = ?");
@@ -98,17 +102,34 @@ public class UsuarioDaoJDBC implements UsuarioDao {
             rs = st.executeQuery();
 
             if (rs.next()) {
-                String opcaoMenuCliente;
                 System.out.println("a. Cadastrar novo produto");
-                opcaoMenuCliente = entrada.next();
-                if (opcaoMenuCliente.equalsIgnoreCase("a")) {
-                    String nomeProduto;
-                    System.out.println("Insira o nome do produto que deseja cadastrar:");
-                    nomeProduto = entrada.next();
-                    Produto p = new Produto(nomeProduto);
-                    ProdutoDao produtoDao = DaoFactory.createProdutoDao();
-                    produtoDao.insert(p);
-                    System.out.println("Produto cadastrado com sucesso!");
+                System.out.println("b. Buscar produto");
+                System.out.println("c. Adicionar ao carrinho");
+                System.out.println("d. Retirar do carrinho");
+                System.out.println("e. Confirmar compra");
+                opcaoMenu = entrada.next();
+                switch (opcaoMenu) {
+                    case "a", "A":
+                        System.out.println("Insira o nome do produto que deseja cadastrar:");
+                        nomeProduto = entrada.next();
+                        p = new Produto(nomeProduto);
+                        produtoDao.insert(p);
+                        System.out.println("Produto cadastrado com sucesso!");
+                        break;
+                    case "b", "B":
+                        System.out.println("Insira o nome do produto que deseja buscar:");
+                        nomeProduto = entrada.next();
+                        produtoDao.SelectByNome(nomeProduto);
+                        break;
+                    case "c", "C":
+
+                        break;
+                    case "d", "D":
+
+                        break;
+                    case "e", "E":
+
+                        break;
                 }
             }
         } catch (SQLException e) {
@@ -125,6 +146,9 @@ public class UsuarioDaoJDBC implements UsuarioDao {
         PreparedStatement st = null;
         ResultSet rs = null;
         Scanner entrada = new Scanner(System.in);
+        ProdutoDao produtoDao = DaoFactory.createProdutoDao();
+        String nomeProduto;
+        String nomeAtualizado;
 
         try {
             st = conn.prepareStatement("SELECT * FROM usuario WHERE login = ? AND senha = ? AND adm = 'true'");
@@ -143,20 +167,28 @@ public class UsuarioDaoJDBC implements UsuarioDao {
                 opcaoMenuAdmin = entrada.next();
                 switch (opcaoMenuAdmin) {
                     case "a", "A":
-                        String nomeProduto;
                         System.out.println("Insira o nome do produto que deseja cadastrar:");
                         nomeProduto = entrada.next();
                         Produto p = new Produto(nomeProduto);
-                        ProdutoDao produtoDao = DaoFactory.createProdutoDao();
                         produtoDao.insert(p);
                         System.out.println("Produto cadastrado com sucesso!");
                         break;
                     case "b", "B":
-                        String nomeProdutoSelect;
                         System.out.println("Insira o nome do produto que deseja buscar:");
-                        nomeProdutoSelect = entrada.next();
-                        ProdutoDao produtoDaoSelect = DaoFactory.createProdutoDao();
-                        produtoDaoSelect.SelectByNome(nomeProdutoSelect);
+                        nomeProduto = entrada.next();
+                        produtoDao.SelectByNome(nomeProduto);
+                        break;
+                    case "c", "C":
+                        System.out.println("Insira o nome do produto que deseja remover:");
+                        nomeProduto = entrada.next();
+                        produtoDao.deleteByNome(nomeProduto);
+                        break;
+                    case "d", "D":
+                        System.out.println("Insira o nome do produto que deseja atualizar:");
+                        nomeProduto = entrada.next();
+                        System.out.println("Insira o novo nome desejado para o produto:");
+                        nomeAtualizado = entrada.next();
+                        produtoDao.update(nomeProduto, nomeAtualizado);
                         break;
                 }
             } else {

@@ -8,7 +8,7 @@ public interface ProdutoDao {
 
     void SelectByNome(String nome);
 
-    void deleteByNome(Produto obj);
+    void deleteByNome(String nome);
 
-    void update(Produto obj);
+    void update(String nomeAtual, String nomeAtualizado);
 }

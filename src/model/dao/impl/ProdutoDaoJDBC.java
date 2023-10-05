@@ -61,16 +61,16 @@ public class ProdutoDaoJDBC implements ProdutoDao {
     }
 
     @Override
-    public void deleteByNome(Produto obj) {
+    public void deleteByNome(String nome) {
 
         PreparedStatement st = null;
+        ResultSet rs = null;
 
         try {
             st = conn.prepareStatement("DELETE FROM produto " + "WHERE nome = ?");
 
-            st.setString(1, obj.getNome());
+            st.setString(1, nome);
 
-            st.executeUpdate();
         } catch (SQLException e) {
             throw new DbException(e.getMessage());
         } finally {
@@ -79,17 +79,20 @@ public class ProdutoDaoJDBC implements ProdutoDao {
     }
 
     @Override
-    public void update(Produto obj) {
+    public void update(String nomeAtual, String nomeAtualizado) {
 
         PreparedStatement st = null;
+        ResultSet rs = null;
 
         try {
             st = conn.prepareStatement("UPDATE produto " + "SET nome = ? " + "WHERE nome = ?");
 
-            st.setString(1, obj.getNome());
+            st.setString(1, nomeAtualizado);
+            st.setString(2, nomeAtual);
 
             st.executeUpdate();
 
+            System.out.println("Produto atualizado!");
         } catch (SQLException e) {
             throw new DbException(e.getLocalizedMessage());
         } finally {
