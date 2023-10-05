@@ -71,6 +71,9 @@ public class ProdutoDaoJDBC implements ProdutoDao {
 
             st.setString(1, nome);
 
+            st.executeUpdate();
+
+            System.out.println("Produto deletado com sucesso!");
         } catch (SQLException e) {
             throw new DbException(e.getMessage());
         } finally {
