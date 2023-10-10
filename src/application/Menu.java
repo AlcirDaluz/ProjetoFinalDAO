@@ -94,6 +94,7 @@ public class Menu {
 
                 usuarioDao.loginAdm(entradaLogin, entradaSenha);
             }
+            default -> System.out.println("Opção inexistente!");
         }
     }
 }
