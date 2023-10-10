@@ -102,24 +102,19 @@ public class UsuarioDaoJDBC implements UsuarioDao {
             rs = st.executeQuery();
 
             if (rs.next()) {
-                System.out.println("a. Cadastrar novo produto");
-                System.out.println("b. Buscar produto");
-                System.out.println("c. Adicionar ao carrinho");
-                System.out.println("d. Retirar do carrinho");
-                System.out.println("e. Confirmar compra");
+                System.out.println("a. Buscar produto");
+                System.out.println("b. Adicionar ao carrinho");
+                System.out.println("c. Retirar do carrinho");
+                System.out.println("d. Confirmar compra");
                 opcaoMenu = entrada.next();
                 switch (opcaoMenu) {
                     case "a", "A":
-                        System.out.println("Insira o nome do produto que deseja cadastrar:");
-                        nomeProduto = entrada.next();
-                        p = new Produto(nomeProduto);
-                        produtoDao.insert(p);
-                        System.out.println("Produto cadastrado com sucesso!");
-                        break;
-                    case "b", "B":
                         System.out.println("Insira o nome do produto que deseja buscar:");
                         nomeProduto = entrada.next();
                         produtoDao.SelectByNome(nomeProduto);
+                        break;
+                    case "b", "B":
+
                         break;
                     case "c", "C":
 
