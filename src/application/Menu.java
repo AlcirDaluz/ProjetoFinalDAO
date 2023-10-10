@@ -47,6 +47,7 @@ public class Menu {
                     usuario.setSenha(entrada.next());
                     System.out.println("Confirme a senha:");
                     usuario.setConfirmacaoSenha(entrada.next());
+                    usuario.setAdm("false");
 
                     usuarioDao.validarSenha(usuario);
 

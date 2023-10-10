@@ -29,13 +29,14 @@ public class UsuarioDaoJDBC implements UsuarioDao {
         PreparedStatement st = null;
 
         try {
-            st = conn.prepareStatement("INSERT INTO usuario " + "(nome, sobrenome, login, senha, confirmacaosenha) " + "VALUES " + "(?, ?, ?, ?, ?)");
+            st = conn.prepareStatement("INSERT INTO usuario " + "(nome, sobrenome, login, senha, confirmacaosenha, adm) " + "VALUES " + "(?, ?, ?, ?, ?, ?)");
 
             st.setString(1, obj.getNome());
             st.setString(2, obj.getSobrenome());
             st.setString(3, obj.getLogin());
             st.setString(4, obj.getSenha());
             st.setString(5, obj.getConfirmacaoSenha());
+            st.setString(6, obj.getAdm());
 
             st.executeUpdate();
 
@@ -94,7 +95,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
         String nomeProduto;
 
         try {
-            st = conn.prepareStatement("SELECT * FROM usuario WHERE login = ? AND senha = ?");
+            st = conn.prepareStatement("SELECT * FROM usuario WHERE login = ? AND senha = ? AND adm = 'false'");
 
             st.setString(1, login);
             st.setString(2, senha);
@@ -126,6 +127,9 @@ public class UsuarioDaoJDBC implements UsuarioDao {
 
                         break;
                 }
+            } else {
+                System.out.println("Este usuário não é comum, você será redirecionado ao menu inicial");
+                Menu.menu();
             }
         } catch (SQLException e) {
             throw new DbException(e.getMessage());
